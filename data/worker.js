@@ -287,7 +287,7 @@ function shift_queue_commands(callback = false, filename = QUEUE_COMMANDS_FILE) 
 
 function handled_error_fs(error) {
     if (error) {
-        console.error(['Error in handled_error_fs: ', error])
+        console.error('Error in handled_error_fs:', error?.message)
     } else {
         console.log("File content written successfully!", QUEUE_COMMANDS_FILE)
     }
