@@ -58,7 +58,8 @@ function load(callback = false, filename = QUEUE_COMMANDS_FILE, add_path = true)
                     command_extracted = command_extracted
                         .substring(15, command_extracted.length - 3)
                     console.log('queue_commands added!!', command_extracted)
-                } else if (queue_commands.constructor.name === 'Array') {
+                }
+                else if (queue_commands.constructor.name === 'Array') {
                     for (let command_value of queue_commands) {
                         let command_extracted = command_value
                             .toString(the_vars.UTF8_SETTING.encoding)
@@ -69,11 +70,13 @@ function load(callback = false, filename = QUEUE_COMMANDS_FILE, add_path = true)
                 } else {
                     console.log('queue_commands added!', queue_commands)
                 }
-            } else if (lines.length <= 0) {
-                queue_commands = false
-                console.log("lines 0 =>", queue_commands)
             }
-        }else if (data === undefined/* || data.toString() <= 0*/) {
+            else if (lines.length <= 0) {
+                queue_commands = false
+                console.log(queued_file_path, ": lines 0 =>", queue_commands)
+            }
+        }
+        else if (data === undefined/* || data.toString() <= 0*/) {
             console.log("QUEUE_COMMANDS_FILE is undefined!")
             save("", true, filename)
             queue_commands = false
