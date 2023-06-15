@@ -15,7 +15,7 @@ module.exports = {
     "writeFile": write_file,
     "shift": shift_queue_commands
 }
-const QUEUE_COMMANDS_FILE_PATH = './extra/'
+const QUEUE_COMMANDS_FILE_PATH = '/opt/spia-view-backend/extra/'
 
 function load(callback = false, filename = QUEUE_COMMANDS_FILE, add_path = true) {
     /*fs_mod.readdir(QUEUE_COMMANDS_FILE_PATH, (err, files) => {
