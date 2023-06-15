@@ -3,7 +3,7 @@ const path_mod = require("path")
 const the_vars = require("./vars")
 var queue_commands = true
 const QUEUE_COMMANDS_FILE = '.worker'
-const QUEUE_COMMANDS_FILE_PATH = '/opt/spia-view-backend/extra/'
+const QUEUE_COMMANDS_FILE_PATH = '/opt/extra/'
 const connections = {}
 module.exports = {
     "_ext": QUEUE_COMMANDS_FILE,
