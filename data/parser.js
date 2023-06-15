@@ -712,7 +712,14 @@ function analyse_block(bufferBlock) {
     if (isCamCommand) {
         return CAM_COMMANDS[cam_command_index](hexBlock)
     }
-    return bufferBlock[9]
+    if (bufferBlock && bufferBlock.length > 24){
+        const buffer_codec = bufferBlock.subarray(23,24)
+        if (Buffer.compare(buffer_codec, the_vars.CMD.REQUESTING) === 0){
+            return bufferBlock[24]
+        }
+        return 0x01
+    }
+    return 0x00
 }
 function read_block(bufferBlock) {
     /* console.log("MOD::read_block? ", typeof bufferBlock) */
