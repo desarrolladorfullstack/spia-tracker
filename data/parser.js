@@ -6,11 +6,12 @@ const the_vars = require('./vars')
 const fs_mod = require('fs')
 const path_mod = require('path')
 const { exec } = require('child_process')
+const EVENTS_LENGTH_BYTE = 24
 const IMEI_BYTE_LENGTH = 8
 const CAM_INIT_BYTE_LENGTH = 4
 const CAM_SETTINGS_BYTE_LENGTH = 4
-const IMEI_LENGTH_BYTES = 2
-const IMEI_BLOCK_LENGTH = 17
+const IMEI_LENGTH_BYTES = 0
+const IMEI_BLOCK_LENGTH = 15
 const RADIX_HEX = the_vars.RADIX_HEX
 const PACKET_BYTES = 1024
 const BYTE_ZERO = the_vars.BYTE_ZERO
@@ -712,10 +713,13 @@ function analyse_block(bufferBlock) {
     if (isCamCommand) {
         return CAM_COMMANDS[cam_command_index](hexBlock)
     }
-    if (bufferBlock && bufferBlock.length > 24){
-        const buffer_codec = bufferBlock.subarray(23,24)
+    if (bufferBlock && bufferBlock.length > EVENTS_LENGTH_BYTE){
+        const imei_id = bufferBlock.subarray(IMEI_LENGTH_BYTES, IMEI_BLOCK_LENGTH)
+        recent_device = new mapper_mod.DeviceData(imei_id)
+        console.log("Init device:", recent_device.toString())
+        const buffer_codec = bufferBlock.subarray(EVENTS_LENGTH_BYTE-1,EVENTS_LENGTH_BYTE)
         if (Buffer.compare(buffer_codec, the_vars.CMD.REQUESTING) === 0){
-            return bufferBlock[24]
+            return bufferBlock[EVENTS_LENGTH_BYTE]
         }
         return 0x01
     }
