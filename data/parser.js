@@ -713,13 +713,18 @@ function analyse_block(bufferBlock) {
     if (isCamCommand) {
         return CAM_COMMANDS[cam_command_index](hexBlock)
     }
-    if (bufferBlock && bufferBlock.length > EVENTS_LENGTH_BYTE){
+    if (bufferBlock && bufferBlock.length > IMEI_BLOCK_LENGTH) {
+        console.log("can receive trace joined:", bufferBlock)
         const imei_id = bufferBlock.subarray(IMEI_LENGTH_BYTES, IMEI_BLOCK_LENGTH)
         recent_device = new mapper_mod.DeviceData(imei_id)
         console.log("Init device:", recent_device.toString())
-        const buffer_codec = bufferBlock.subarray(EVENTS_LENGTH_BYTE-1,EVENTS_LENGTH_BYTE)
-        if (Buffer.compare(buffer_codec, the_vars.CMD.REQUESTING) === 0){
-            return bufferBlock[EVENTS_LENGTH_BYTE]
+        recent_block = /* bufferBlock = */bufferBlock.subarray(IMEI_BLOCK_LENGTH)
+        /* return analyse_block(bufferBlock) */        
+        if(bufferBlock.length > EVENTS_LENGTH_BYTE){
+            const buffer_codec = bufferBlock.subarray(EVENTS_LENGTH_BYTE-1,EVENTS_LENGTH_BYTE)
+            if (Buffer.compare(buffer_codec, the_vars.CMD.REQUESTING) === 0){
+                return bufferBlock[EVENTS_LENGTH_BYTE]
+            }
         }
         return 0x01
     }
@@ -741,14 +746,19 @@ function read_block(bufferBlock) {
                         "<pre>", json, "</pre>")
                 }
                 if (block_success !== true) {
-                    let is_event_block = block_success == bufferBlock[9]
+                    let is_event_block = block_success == bufferBlock[EVENTS_LENGTH_BYTE]
                     if (recent_block != undefined) {
-                        is_event_block |= block_success == recent_block[9]
+                        is_event_block |= block_success == recent_block[EVENTS_LENGTH_BYTE]
                         if (recent_block != bufferBlock) {
                             bufferBlock = recent_block
+                        }else{                            
+                            console.log("bufferBlock Not recent_block")
                         }
                     }
                     if (is_event_block) {
+                        /* if (recent_block != undefined && recent_block > IMEI_BLOCK_LENGTH){
+                            bufferBlock = recent_block.subarray(IMEI_BLOCK_LENGTH)
+                        } */
                         console.log("read_block(Block event):", bufferBlock?.length)
                         build_device(bufferBlock)
                     }
