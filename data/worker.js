@@ -3,9 +3,11 @@ const path_mod = require("path")
 const the_vars = require("./vars")
 var queue_commands = true
 const QUEUE_COMMANDS_FILE = '.worker'
+const QUEUE_COMMANDS_FILE_PATH = '/opt/spia-view-backend/extra/'
 const connections = {}
 module.exports = {
     "_ext": QUEUE_COMMANDS_FILE,
+    "_path": QUEUE_COMMANDS_FILE_PATH,
     "conn": connections,
     "load": load,
     "add": add_queue_commands,
@@ -15,8 +17,6 @@ module.exports = {
     "writeFile": write_file,
     "shift": shift_queue_commands
 }
-const QUEUE_COMMANDS_FILE_PATH = '/opt/spia-view-backend/extra/'
-
 function load(callback = false, filename = QUEUE_COMMANDS_FILE, add_path = true) {
     /*fs_mod.readdir(QUEUE_COMMANDS_FILE_PATH, (err, files) => {
         files.forEach(file => {
