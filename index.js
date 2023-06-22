@@ -64,10 +64,13 @@ function command_writer(socket, test = true, device = false) {
         if (test) {
           console.log('command_writer TEST:', test)
         }
-        const command = sender_mod.sendCommand(hex_block, test)
+        const command = sender_mod.generate(hex_block, test)
         if (command) {
           try {
             socket.write(command)
+            if(!worker_commands || !hex_block){
+              worker_mod.add(command, true, device)
+            }
           } catch (socker_write_e) {
             console.log('SEND COMMAND:', command, 'ERROR:', socker_write_e)
           }
@@ -88,6 +91,12 @@ function command_writer(socket, test = true, device = false) {
       console.log("CMD:", command_value ?? success/* , success.constructor.name */)
       worker_mod.shift((updated)=>{
         console.log("worker_mod.shift:", updated)
+        if (!updated) {
+          /* command_next = sender_mod.next(command)
+          if (command_next){
+            worker_mod.add(command_next,true,device)
+          } */
+        }
         /* if (updated){ */
           /* return */ command_writer(socket, false)
           return command_value
