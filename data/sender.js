@@ -76,10 +76,9 @@ function nextCommand(hex_block=false){
         return false
     }
     if (hex_block.constructor.name === 'Buffer') {
-        let command_extracted = hex_block
+        const command_extracted = hex_block
+            .subarray(15, hex_block.length - 5)
             .toString(the_vars.UTF8_SETTING.encoding)
-        command_extracted = command_extracted
-            .substring(15, command_extracted.length - 3)
         console.log('nextCommand from?', command_extracted)
         let command_next = Object.fromEntries(
                 Object.entries(NEXT_COMMANDS).filter( ([next_type])=>{
@@ -90,7 +89,7 @@ function nextCommand(hex_block=false){
                         return false
                     })
                 )
-        if (command_next && command_next.length > 0){
+        if (command_next && Object.keys(command_next).length > 0){
             command_next =  Object.values(command_next).shift()
             if (command_next.constructor.name === 'Function'){
                 command_next = command_next()
@@ -99,6 +98,8 @@ function nextCommand(hex_block=false){
             }
             console.log('command_next =>', command_next)
             return command_next
+        }else{
+            console.log('command_next (len:0)??', command_next)
         }
     }
     return command_dout()

@@ -53,18 +53,16 @@ function load(callback = false, filename = QUEUE_COMMANDS_FILE, add_path = true)
             if (queued_buffered_command.length > 0) {
                 add_queue_commands(queued_buffered_command, false)
                 if (queue_commands.constructor.name === 'Buffer') {
-                    let command_extracted = queue_commands
+                    const command_extracted = queue_commands
+                        .subarray(15, queue_commands.length - 5)
                         .toString(the_vars.UTF8_SETTING.encoding)
-                    command_extracted = command_extracted
-                        .substring(15, command_extracted.length - 3)
                     console.log('queue_commands added!!', command_extracted)
                 }
                 else if (queue_commands.constructor.name === 'Array') {
                     for (let command_value of queue_commands) {
-                        let command_extracted = command_value
+                        const command_extracted = command_value
+                            .subarray(15, command_value.length - 5)
                             .toString(the_vars.UTF8_SETTING.encoding)
-                        command_extracted = command_extracted
-                            .substring(15, command_extracted.length - 3)
                         console.log('queue_commands added [!]', command_extracted)
                     }
                 } else {
@@ -273,10 +271,9 @@ function shift_queue_commands(callback = false, filename = QUEUE_COMMANDS_FILE) 
                     console.log('queue commands ready for truncate[!]')
                 } else {
                     for (let command_value of data) {
-                        let command_extracted = command_value
+                        const command_extracted = command_value
+                            .subarray(15, command_value.length - 5)
                             .toString(the_vars.UTF8_SETTING.encoding)
-                        command_extracted = command_extracted
-                            .substring(15, command_extracted.length - 3)
                         console.log('ready to shift queue commands[!]:', command_extracted)
                     }
                 }

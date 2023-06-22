@@ -51,7 +51,7 @@ class EventProperty {
         if (this.#_property_block !== undefined){
 
         }else if (this.#_property_object !== undefined){
-            this._property_id = Object.keys(this.#_property_object)[0]
+            this._property_id = Object.keys(this.#_property_object).shift()
             this._property_value = this.#_property_object[this._property_id]
         }
     }
@@ -223,9 +223,9 @@ class DeviceEvent extends EventType {
                     }else{
                         worker_mod.load(function (result) {
                             if (result.constructor.name === 'Array' && result.length > 0){
-                                result = result[0]
-                                let command_value = result.toString(the_vars.UTF8_SETTING.encoding)
-                                command_value = command_value.substring(15, command_value.length-4)
+                            const result_any = Array.from(result).shift()
+                            const command_value = result_any.subarray(15, result_any.length - 5)
+                                .toString(the_vars.UTF8_SETTING.encoding)
                                 console.log("LOOP_SAVE_EVENT(callback): (command_value) =>", command_value)
                             }else{
                                 console.log("LOOP_SAVE_EVENT(callback): (result) =>", result)                    

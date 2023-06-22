@@ -122,7 +122,7 @@ const packet_response = (any = false) => {
 const file_req_response = (cam_input = "videor") => {
     const queued_files = load_temp_packets()
     if (queued_files) {
-        file_name = Object.keys(queued_files)[0]
+        file_name = Object.keys(queued_files).shift()
         packet_offset = queued_files[file_name]
         console.log('queued file:', file_name, packet_offset)
         return packet_response()
@@ -233,7 +233,7 @@ function define_hex_file_types_for_records_flush() {
                     return
                 }
                 /* console.log(`stdout [search_file_path_cmd]: ${stdout}`, search_file_path_cmd, typeof stdout) */
-                let file_path = stdout.split("\n")[0]
+                let file_path = stdout.split("\n").shift()
                 define_file_type_in_file_name(file_path, file_hex_path)
             })
         }
@@ -687,9 +687,9 @@ function analyse_block(bufferBlock) {
         if (response_value.indexOf(CAMERA_NOT_PRESENT) > -1) {
             worker_mod.load(function (result) {
                 if (result.constructor.name === 'Array' && result.length > 0){
-                    result = result[0]
-                    let command_value = result.toString(the_vars.UTF8_SETTING.encoding)
-                    command_value = command_value.substring(15, command_value.length-4)
+                    const result_any = Array.from(result).shift()
+                    const command_value = result_any.subarray(15, result_any.length - 5)
+                        .toString(the_vars.UTF8_SETTING.encoding)
                     console.log("COMMAND RESPONSE(callback): (command_value) =>", command_value)
                 }else{
                     console.log("COMMAND RESPONSE(callback): (result) =>", result)                    
