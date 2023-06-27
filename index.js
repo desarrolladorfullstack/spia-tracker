@@ -48,9 +48,12 @@ function command_writer(socket, test = true, device = false) {
           const command_type_name = worker_commands.constructor.name
           if (command_type_name === 'Array') {
             hex_block = Array.from(worker_commands).shift()
-            const command_extracted = hex_block
+            let command_extracted = hex_block
+            if (command_extracted.constructor.name === 'Buffer') {
+              command_extracted = command_extracted
               .subarray(15, hex_block.length - 5)
               .toString(the_vars.UTF8_SETTING.encoding)
+            }
             console.log('queue_commands typeof is Array[!]:', command_extracted)
           } else if (command_type_name === 'Object') {
             console.log("queue_commands typeof is Object")
@@ -85,11 +88,15 @@ function command_writer(socket, test = true, device = false) {
     }, device)
   }).then((success) => {
     if (success.length > 0) {
-      const command_value = success.subarray(15, success.length - 5)
+      let command_value = success
+      if (command_value.constructor.name === 'Buffer'){
+          command_value = command_value
+            .subarray(15, success.length - 5)
         .toString(the_vars.UTF8_SETTING.encoding)
+      }
       console.log("CMD:", command_value ?? success/* , success.constructor.name */)
       worker_mod.shift((updated)=>{
-        console.log("worker_mod.shift:", updated)
+        console.log("worker_mod.shift:", updated, 'on:', device)
         if (!updated || updated.length <= 0) {
           /* command_next = sender_mod.next(success)
           if (command_next){
